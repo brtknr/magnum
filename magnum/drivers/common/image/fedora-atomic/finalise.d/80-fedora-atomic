@@ -56,14 +56,3 @@ grub2-mkconfig -o /boot/grub2/grub.cfg
 # remove non usable images
 rm -rf /boot/vmlinuz*
 rm -rf /boot/initramfs*
-
-# image cleanup
-if [ $DIB_RELEASE -ge 22 ]; then
-    dnf -y remove dracut grubby kernel initscript man-pages redhat-lsb-core selinux-policy selinux-policy-targeted
-    dnf autoremove
-    dnf clean all
-else
-    yum -y remove dracut grubby kernel initscript man-pages redhat-lsb-core selinux-policy selinux-policy-targeted
-    yum autoremove
-    yum clean all
-fi
