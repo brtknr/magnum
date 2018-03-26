@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+# Remove up unnecessary packages from the image.
+
+# NOTE(mgoddard): This script was separated from finalise.d/80-fedora-atomic to
+# ensure that the following packages are available as late as possible in the
+# finalise step. The specific use case is using the dracut-regenerate element
+# to regenerate a ramdisk, and has a dependency on dracut in
+# finalise.d/98-dracut-regenerate.
+
+if [ $DIB_RELEASE -ge 22 ]; then
+    dnf -y remove dracut grubby kernel initscript man-pages redhat-lsb-core selinux-policy selinux-policy-targeted
+    dnf autoremove
+    dnf clean all
+else
+    yum -y remove dracut grubby kernel initscript man-pages redhat-lsb-core selinux-policy selinux-policy-targeted
+    yum autoremove
+    yum clean all
+fi
