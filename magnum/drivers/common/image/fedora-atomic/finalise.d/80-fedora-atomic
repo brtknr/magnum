@@ -8,12 +8,14 @@ set -o pipefail
 
 # generate ostree in root
 cd /
-# ostree admin os-init fedora-atomic
-mkdir /ostree/deploy/fedora-atomic
-ostree --repo=/ostree/deploy/fedora-atomic init
-ostree --repo=/ostree/deploy/fedora-atomic remote add --set=gpg-verify=false fedora-atomic ${FEDORA_ATOMIC_TREE_URL}
-ostree --repo=/ostree/deploy/fedora-atomic pull fedora-atomic ${FEDORA_ATOMIC_TREE_REF}
-ostree --repo=/ostree/deploy/fedora-atomic remote delete fedora-atomic
+mkdir -p /ostree/repo
+ostree init --repo=/ostree/repo
+ostree remote add --set=gpg-verify=false fedora-atomic ${FEDORA_ATOMIC_TREE_URL}
+ostree pull fedora-atomic ${FEDORA_ATOMIC_TREE_REF}
+ostree remote delete fedora-atomic
+
+mkdir /ostree/deploy
+ostree admin os-init fedora-atomic
 ostree admin deploy --os=fedora-atomic ${FEDORA_ATOMIC_TREE_REF} --karg-proc-cmdline --karg=selinux=0
 
 # copy /etc/fstab to the deployed directory
