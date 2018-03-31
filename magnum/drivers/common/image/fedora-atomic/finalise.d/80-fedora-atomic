@@ -28,18 +28,23 @@ DEPLOYED_ID=${DEPLOYED_DIRECTORY##*-}
 INIT_IMAGE=$(find ${DEPLOYED_DIRECTORY} -name initramfs*.img)
 VMLINUZ_IMAGE=$(find ${DEPLOYED_DIRECTORY} -name vmlinuz*)
 
-export DIB_IMAGE_ROOT_FS_UUID=$(uuidgen -r)
+DIB_IMAGE_ROOT_FS_UUID=$(uuidgen -r)
 
 # generate ostree boot
 cat > /etc/grub.d/15_ostree <<EOF
 cat <<EOL
-menuentry 'Fedora ${DIB_RELEASE} (ostree)' --class gnu-linux --class gnu --class os --unrestricted "ostree-0-${DIB_IMAGE_ROOT_FS_UUID}" {
-set gfxpayload=text
+menuentry 'Fedora ${DIB_RELEASE} (ostree)' --class gnu-linux --class gnu --class os --unrestricted 'ostree-0-${DIB_IMAGE_ROOT_FS_UUID}' {
+set gfxpayload=keep
 insmod gzio
 insmod part_msdos
 insmod ext2
-search --no-floppy --set=root --label ${DIB_ROOT_LABEL}
-linux16 ${VMLINUZ_IMAGE} root=LABEL=${DIB_ROOT_LABEL} ro nofb nomodeset vga=normal console=tty0 console=ttyS0,115200 no_timer_check rd.shell=0 ostree=/ostree/boot.1/fedora-atomic/${DEPLOYED_ID}/0
+set root='hd0,msdos1'
+if [ x\$feature_platform_search_hint = xy ]; then
+  search --no-floppy --fs-uuid --hint='hd0,msdos1' --label ${DIB_ROOT_LABEL} --set=root ${DIB_IMAGE_ROOT_FS_UUID}
+else
+  search --no-floppy --fs-uuid --label ${DIB_ROOT_LABEL} --set=root ${DIB_IMAGE_ROOT_FS_UUID}
+fi
+linux16 ${VMLINUZ_IMAGE} no_timer_check console=tty1 console=ttyS0,115200n8 console=ttyAMA0 console=hvc0 net.ifnames=0 root=LABEL=${DIB_ROOT_LABEL} ostree=/ostree/boot.1/fedora-atomic/${DEPLOYED_ID}/0
 initrd16 ${INIT_IMAGE}
 }
 EOL

@@ -4,6 +4,9 @@
 # images using diskimage-builder. Please not it only has been
 # tested on Ubuntu Trusty
 
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
 set -eux
 set -o pipefail
 
