@@ -362,6 +362,9 @@ the table are linked to more details elsewhere in the user guide.
 | `cloud_provider_enabled`_             | - true             | true          |
 |                                       | - false            |               |
 +---------------------------------------+--------------------+---------------+
+| `config_drive_enabled`_               | - true             | false         |
+|                                       | - false            |               |
++---------------------------------------+--------------------+---------------+
 | `service_cluster_ip_range`            | IPv4 CIDR for k8s  | 10.254.0.0/16 |
 |                                       | service portals    |               |
 +---------------------------------------+--------------------+---------------+
@@ -1160,6 +1163,11 @@ _`cloud_provider_enabled`
   to true. For specific kubernetes versions if 'cinder' is selected as a
   'volume_driver', it is implied that the cloud provider will be enabled since
   they are combined.
+
+_`config_drive_enabled`
+  Add 'config_drive_enabled' label for the k8s_fedora_atomic and swarm_mode
+  drivers which enables config drive on Nova instances in the cluster. Defaults
+  to false.
 
 External load balancer for services
 -----------------------------------

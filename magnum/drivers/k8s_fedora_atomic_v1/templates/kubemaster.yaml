@@ -391,6 +391,10 @@ parameters:
     type: boolean
     description: Enable or disable the openstack kubernetes cloud provider
 
+  config_drive_enabled:
+    type: boolean
+    description: whether to pass metada to the instance via config drive
+
   prometheus_tag:
     type: string
     description: tag of prometheus container
@@ -754,6 +758,7 @@ resources:
         - port: {get_resource: kube_master_eth0}
       scheduler_hints: { group: { get_param: nodes_server_group_id }}
       availability_zone: {get_param: availability_zone}
+      config_drive: {get_param: config_drive_enabled}
 
   kube_master_eth0:
     type: OS::Neutron::Port

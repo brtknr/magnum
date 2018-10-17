@@ -128,14 +128,17 @@ class SwarmModeTemplateDefinition(template_def.BaseTemplateDefinition):
         osc = self.get_osc(context)
         extra_params['magnum_url'] = osc.magnum_url()
 
-        label_list = ['rexray_preempt', 'availability_zone']
+        label_list = ['rexray_preempt', 'availability_zone',
+                      'config_drive_enabled']
 
         extra_params['auth_url'] = context.auth_url
         extra_params['nodes_affinity_policy'] = \
             CONF.cluster.nodes_affinity_policy
 
         for label in label_list:
-            extra_params[label] = cluster_template.labels.get(label)
+            label_value = cluster.labels.get(label)
+            if label_value:
+                extra_params[label] = label_value
 
         # set docker_volume_type
         # use the configuration default if None provided

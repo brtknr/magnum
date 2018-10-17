@@ -200,6 +200,11 @@ parameters:
       availability zone for master and nodes
     default: ""
 
+  config_drive_enabled:
+    type: boolean
+    description: whether to pass metada to the instance via config drive
+    default: false
+
 resources:
 
   ######################################################################
@@ -351,6 +356,7 @@ resources:
           openstack_ca: {get_param: openstack_ca}
           nodes_server_group_id: {get_resource: nodes_server_group}
           availability_zone: {get_param: availability_zone}
+          config_drive_enabled: {get_param: config_drive_enabled}
 
   swarm_secondary_masters:
     type: "OS::Heat::ResourceGroup"
@@ -396,6 +402,7 @@ resources:
           openstack_ca: {get_param: openstack_ca}
           nodes_server_group_id: {get_resource: nodes_server_group}
           availability_zone: {get_param: availability_zone}
+          config_drive_enabled: {get_param: config_drive_enabled}
 
   swarm_nodes:
     type: "OS::Heat::ResourceGroup"
@@ -441,6 +448,7 @@ resources:
           openstack_ca: {get_param: openstack_ca}
           nodes_server_group_id: {get_resource: nodes_server_group}
           availability_zone: {get_param: availability_zone}
+          config_drive_enabled: {get_param: config_drive_enabled}
 
 outputs:
 

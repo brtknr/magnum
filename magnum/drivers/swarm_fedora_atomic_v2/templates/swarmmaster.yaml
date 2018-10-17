@@ -150,6 +150,10 @@ parameters:
       availability zone for master and nodes
     default: ""
 
+  config_drive_enabled:
+    type: boolean
+    description: whether to pass metada to the instance via config drive
+
 resources:
 
   master_wait_handle:
@@ -333,6 +337,7 @@ resources:
             get_resource: swarm_master_eth0
       scheduler_hints: { group: { get_param: nodes_server_group_id }}
       availability_zone: {get_param: availability_zone}
+      config_drive: {get_param: config_drive_enabled}
 
   swarm_master_eth0:
     type: "OS::Neutron::Port"

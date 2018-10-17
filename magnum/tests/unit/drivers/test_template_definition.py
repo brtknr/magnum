@@ -399,6 +399,8 @@ class AtomicK8sTemplateDefinitionTestCase(BaseK8sTemplateDefinitionTestCase):
             'kubeproxy_options')
         cloud_provider_enabled = mock_cluster.labels.get(
             'cloud_provider_enabled')
+        config_drive_enabled = mock_cluster.labels.get(
+            'config_drive_enabled')
         service_cluster_ip_range = mock_cluster.labels.get(
             'service_cluster_ip_range')
         prometheus_tag = mock_cluster.labels.get(
@@ -431,6 +433,7 @@ class AtomicK8sTemplateDefinitionTestCase(BaseK8sTemplateDefinitionTestCase):
             'kubescheduler_options': kubescheduler_options,
             'kubeproxy_options': kubeproxy_options,
             'cloud_provider_enabled': cloud_provider_enabled,
+            'config_drive_enabled': config_drive_enabled,
             'username': 'fake_user',
             'magnum_url': mock_osc.magnum_url.return_value,
             'region_name': mock_osc.cinder_region_name.return_value,
@@ -462,7 +465,10 @@ class AtomicK8sTemplateDefinitionTestCase(BaseK8sTemplateDefinitionTestCase):
                                                 **expected_kwargs)
 
         mock_cluster_template.volume_driver = 'cinder'
-        mock_cluster.labels = {'cloud_provider_enabled': 'false'}
+        mock_cluster.labels = {
+            'cloud_provider_enabled': 'false',
+            'config_drive_enabled': 'true',
+        }
         k8s_def = k8sa_tdef.AtomicK8sTemplateDefinition()
         self.assertRaises(
             exception.InvalidParameterValue,
@@ -572,6 +578,8 @@ class AtomicK8sTemplateDefinitionTestCase(BaseK8sTemplateDefinitionTestCase):
             'kubeproxy_options')
         cloud_provider_enabled = mock_cluster.labels.get(
             'cloud_provider_enabled')
+        config_drive_enabled = mock_cluster.labels.get(
+            'config_drive_enabled')
         service_cluster_ip_range = mock_cluster.labels.get(
             'service_cluster_ip_range')
         prometheus_tag = mock_cluster.labels.get(
@@ -604,6 +612,7 @@ class AtomicK8sTemplateDefinitionTestCase(BaseK8sTemplateDefinitionTestCase):
             'kubescheduler_options': kubescheduler_options,
             'kubeproxy_options': kubeproxy_options,
             'cloud_provider_enabled': cloud_provider_enabled,
+            'config_drive_enabled': config_drive_enabled,
             'username': 'fake_user',
             'magnum_url': mock_osc.magnum_url.return_value,
             'region_name': mock_osc.cinder_region_name.return_value,
@@ -1058,9 +1067,9 @@ class AtomicSwarmModeTemplateDefinitionTestCase(base.TestCase):
 
         docker_volume_type = mock_cluster_template.labels.get(
             'docker_volume_type')
-        rexray_preempt = mock_cluster_template.labels.get('rexray_preempt')
-        availability_zone = mock_cluster_template.labels.get(
-            'availability_zone')
+        rexray_preempt = mock_cluster.labels.get('rexray_preempt')
+        availability_zone = mock_cluster.labels.get('availability_zone')
+        config_drive_enabled = mock_cluster.labels.get('config_drive_enabled')
 
         number_of_secondary_masters = mock_cluster.master_count - 1
 
@@ -1075,6 +1084,7 @@ class AtomicSwarmModeTemplateDefinitionTestCase(base.TestCase):
             'docker_volume_type': docker_volume_type,
             'number_of_secondary_masters': number_of_secondary_masters,
             'availability_zone': availability_zone,
+            'config_drive_enabled': config_drive_enabled,
             'nodes_affinity_policy': 'soft-anti-affinity'}}
         mock_get_params.assert_called_once_with(mock_context,
                                                 mock_cluster_template,
